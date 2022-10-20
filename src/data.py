@@ -1,4 +1,3 @@
-from heapq import merge
 import os
 from dotenv import load_dotenv, find_dotenv
 import numpy as np
@@ -20,7 +19,7 @@ class DataPreProcess():
     A class for importing and preprocessing of our dataset
     """
     OUTPUT_DATAFRAME = os.environ.get("PROCESSED_DATAPATH")
-    def __init__(self, path: str =None, columns: list = None, scaler = None):
+    def __init__(self, columns: list = None, scaler = None):
         """
         ----------
         Initializes DataPreProcess Class
