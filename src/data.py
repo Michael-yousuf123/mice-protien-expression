@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 from collections import Counter
 from imblearn.over_sampling import SMOTE
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
-labelencoder = LabelEncoder()
 # Set plot style
 
 dotenv_path = find_dotenv()
@@ -70,13 +69,14 @@ class DataPreProcess():
         else:
             print("No missing values encountered")  
         return data
-    def balanced_data(data: pd.DataFrame ):
+    def balanced_data(data: pd.DataFrame = None):
         """
         function to split our datasets and 
         correct the imbalances of classes o
         bserved in the datasets"""
         df = data.values
         X, y = df[:,:-1], df[:,-1]
+        labelencoder = LabelEncoder()
         y = LabelEncoder().fit_transform(y)
         oversample = SMOTE()
         X, y = oversample.fit_resample(X, y)

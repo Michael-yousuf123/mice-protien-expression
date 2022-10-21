@@ -1,26 +1,11 @@
-import numpy as np
-import pandas as pd 
-import matplotlib.pyplot as plt 
-from data import *
+import os
+from dotenv import load_dotenv, find_dotenv
 
+# find .env automagically by walking up directories until it's found
+dotenv_path = find_dotenv()
 
-# initialize the weight node for som
-# calculating the best matching unit
-# 
-class SOM:
-    """
-    A class for the implementation of Self Organizing Map,
-    an unsupervised learning which provide a visualization
-    methods for high dimensional data by reducing of its 
-    dimension to map"""
-    def __init__(self, m, n, lr=None, random_state= 1234):
-        """
-        """
-        self
-    def bmu():
-        pass 
-    def train():
-        pass 
-    def update_bmu():
-        pass 
-    
+# load up the entries as environment variables
+load_dotenv(dotenv_path)
+
+database_url = os.environ.get("DATABASE_URL")
+other_variable = os.environ.get("OTHER_VARIABLE")
