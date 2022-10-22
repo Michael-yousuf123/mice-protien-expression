@@ -8,17 +8,17 @@ from imblearn.over_sampling import SMOTE
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 # Set plot style
 
-dotenv_path = find_dotenv()
-load_dotenv(dotenv_path)
+# dotenv_path = find_dotenv()
+# load_dotenv(dotenv_path)
 
-INPUT_DATAFRAME = os.environ.get("INPUT_DATAPATH")
-
+# INPUT_DATAFRAME = os.environ.get('INPUT_DATAPATH')
+INPUT_DATAFRAME="/home/miki/Desktop/Docker/iNeuron/mice-protien-expression/data/raw/Data_Cortex_Nuclear.xlsx"
 class DataPreProcess():
     """
     A class for importing and preprocessing of our dataset
     """
     OUTPUT_DATAFRAME = os.environ.get("PROCESSED_DATAPATH")
-    def __init__(self, columns: list = None, scaler = None):
+    def __init__(self, columns: list = None, encoder = None):
         """
         ----------
         Initializes DataPreProcess Class
@@ -31,7 +31,7 @@ class DataPreProcess():
             columns that are not needed and need to
             be dropped from the data."""
         self._columns = columns
-        self._scaler = scaler
+        self._encoder = encoder
     def import_data(self, path: str = None, columns: list = None):
         """
         Function to import a dataset into 
@@ -76,16 +76,12 @@ class DataPreProcess():
         bserved in the datasets"""
         df = data.values
         X, y = df[:,:-1], df[:,-1]
-        labelencoder = LabelEncoder()
-        y = LabelEncoder().fit_transform(y)
         oversample = SMOTE()
         X, y = oversample.fit_resample(X, y)
-        scaler = MinMaxScaler()
-        X = scaler.fit_transform(X.to_numpy())
         counter = Counter(y)
         for key,value in counter.items():
             per = value / len(y) * 100
-            print('Class=%d, n=%d (%.3f%%)' % (key, value, per))
+            print('Class=%s, n=%s (%.3f%%)' % (key, value, per))
         return X, y
     @classmethod    
     def export_data(cls, X_train, y_train, out_path):
@@ -96,3 +92,13 @@ class DataPreProcess():
         out_path = os.path.join(cls.OUTPUT_DATAFRAME, out_path)
         df = pd.DataFrame ({'X':X_train,'Y':y_train})
         return df.to_csv(out_path)
+if __name__ == '__main__':
+    paths = INPUT_DATAFRAME
+    col = ['MouseID','Genotype', 'Treatment', 'Behavior']
+    di = DataPreProcess(col)
+    data = di.import_data(paths, col)
+    d = di.null_test(data)
+    X_train, y_train = di.balanced_data(d)
+    outfile = '/home/miki/Desktop/Docker/iNeuron/mice-protien-expression/data/final/protien.csv'
+    di.export_data(X_train, y_train, outfile)
+ 
